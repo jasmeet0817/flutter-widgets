@@ -3419,7 +3419,8 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
                           .contains(_pdfViewerController.pageNumber)) {
                     Future<dynamic>.delayed(Duration.zero, () async {
                       if (_pageController.hasClients) {
-                        _pdfViewerController._scrollPositionX = 0;
+                        // Why ever set this to 0 ? Huh ?
+                        // _pdfViewerController._scrollPositionX = 0;
                       }
                       if (!_isSearchStarted) {
                         _pdfPagesKey[_pdfViewerController.pageNumber]
@@ -5199,6 +5200,10 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
             yOffset: _pdfViewerController._verticalOffset);
       }
       _getTileImage();
+    } else if (property == 'scrollTo') {
+      _singlePageViewKey.currentState!.jumpTo(
+          xOffset: _pdfViewerController._horizontalOffset,
+          yOffset: _pdfViewerController._verticalOffset);
     } else if (property == 'pageNavigate' &&
         _pdfViewerController._pageNavigator != null) {
       _clearSelection();
@@ -6417,6 +6422,12 @@ class PdfViewerController extends ChangeNotifier with _ValueChangeNotifier {
     _horizontalOffset = xOffset;
     _verticalOffset = yOffset;
     _notifyPropertyChangedListeners(property: 'jumpTo');
+  }
+
+  void scrollTo({double xOffset = 0.0, double yOffset = 0.0}) {
+    _horizontalOffset = xOffset;
+    _verticalOffset = yOffset;
+    _notifyPropertyChangedListeners(property: 'scrollTo');
   }
 
   /// Navigates to the specified page number in a PDF document.
